@@ -23,154 +23,164 @@ export const request = obj => {
   });
 };
 
-export class Autocomplete {
+const search = async(question) => {
 
-    constructor(input, options) {
-
-        this.input = input;
-        this.options = options;
-        this.focus = -1;
-
-        this.data = ['Some', 'this'];
-    }
-
-    addActive(children) {
-
-        this.removeActive(children);
-
-        
-
-        if (this.focus >= children.length) this.focus = 0;
-        if (this.focus < 0) this.focus = (this.data.length - 1);
-
-        children[this.focus].classList.add(this.options.active);
-        console.log(children[this.focus].classList);
-    }
-
-    removeActive(children) {
-
-        for (let i = 0; i < children.length; i++) {
-
-            if (i != this.focus) {
-                children[i].classList.remove(this.options.active);
-            }
+    return await request({
+        method: 'POST',
+        url: '/search',
+        body: `question=${question}`,
+        headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
         }
-        this.click();        
-    }
+    })
 
-    create(element, attributes = {}) {
+};
 
-        element = document.createElement(element);
+// export class Autocomplete {
+
+//     constructor(input, options) {
+
+//         this.input = input;
+//         this.options = options;
+//     }
+
+//     addActive(children) {
+
+//         this.removeActive(children);
+
+//         if (this.focus >= children.length) this.focus = 0;
+//         if (this.focus < 0) this.focus = (this.data.length - 1);
+
+//         children[this.focus].classList.add(this.options.active);
+//     }
+
+//     removeActive(children) {
+
+//         for (let i = 0; i < children.length; i++) {
+
+//             if (i != this.focus) {
+//                 children[i].classList.remove(this.options.active);
+//             }
+//         }
+//         this.click();        
+//     }
+
+//     create(element, attributes = {}) {
+
+//         element = document.createElement(element);
         
-        Object.keys(attributes).forEach(attribute => {
+//         Object.keys(attributes).forEach(attribute => {
 
-            element.setAttribute(attribute, attributes[attribute]);
+//             element.setAttribute(attribute, attributes[attribute]);
 
-        });
+//         });
 
-        return element;
-    } 
+//         return element;
+//     } 
 
-    closeAllLists(element) {
+//     closeAllLists(element) {
 
-        const lists = document.querySelectorAll(`.${this.options.class}`);
-        for (let i = 0; i < lists.length; i++) {
+//         const lists = document.querySelectorAll(`.${this.options.class}`);
+//         for (let i = 0; i < lists.length; i++) {
         
-            if (element != lists[i] && element != this.input) {
-                console.log('delete');                
-                lists[i].parentNode.removeChild(lists[i]);
-            }
-        }
-    }
+//             if (element != lists[i] && element != this.input) {
 
-    inputEvent() {
+//                 lists[i].parentNode.removeChild(lists[i]);
+//             }
+//         }
+//     }
 
-        this.input.addEventListener('input', (event) => {
+//     inputEvent() {
 
-            this.closeAllLists();
+//         this.input.addEventListener('input', async (event) => {
 
-            if(!this.input.value) return false;
+//             this.closeAllLists();
 
-            this.focus = -1;
+//             if(!this.input.value) return false;
 
-            const parent = this.create('div', {
-                'id': this.input.id + this.options.id,
-                'class': this.options.class
-            });
+//             this.data = await search(this.input.value);
+//             this.data = JSON.parse(this.data);
+            
+//             this.focus = -1;
 
-            this.input.parentNode.appendChild(parent);
+//             const parent = this.create('div', {
+//                 'id': this.input.id + this.options.id,
+//                 'class': this.options.class
+//             });
 
-            this.data.forEach((item) => {
+//             this.input.parentNode.appendChild(parent);
+            
+//             this.data.forEach((item) => {
 
-                const child = this.create('div');
+//                 const child = this.create('div');
                 
-                child.innerHTML = item;
+//                 child.innerHTML = item;
 
-                const hiddenInput = this.create('input', {'type': 'hidden'});
-                hiddenInput.value = item;
+//                 const hiddenInput = this.create('input', {'type': 'hidden'});
+//                 hiddenInput.value = item;
 
-                child.appendChild(hiddenInput);
+//                 child.appendChild(hiddenInput);
 
-                child.addEventListener('click', (event) => {
+//                 child.addEventListener('click', (event) => {
 
-                    this.input.value = child.querySelector('input').value;
+//                     this.input.value = child.querySelector('input').value;
 
-                    this.closeAllLists();
-                });
+//                     this.closeAllLists();
+//                 });
 
-                parent.appendChild(child);
-            });
+//                 parent.appendChild(child);
+//             });
 
-        });
-    }
+//         });
+//     }
 
-    keydown() {
+//     keydown() {
 
-        this.input.addEventListener('keydown', (event) => {
+//         this.input.addEventListener('keydown', (event) => {
 
-            const parent = document.querySelector(`#${this.input.id + this.options.id}`);
-            let children;
+//             const parent = document.querySelector(`#${this.input.id + this.options.id}`);
+//             let children;
 
-            if (parent) {
+//             if (parent) {
 
-                children = parent.querySelectorAll('div');
-            }
+//                 children = parent.querySelectorAll('div');
+//             }
 
-            if (event.keyCode == 40) {
+//             if (event.keyCode == 40) {
         
-                this.focus++;
-                this.addActive(children);
+//                 this.focus++;
+//                 this.addActive(children);
 
-            } else if (event.keyCode == 38) {
+//             } else if (event.keyCode == 38) {
 
-                this.focus--;
-                this.addActive(children);
+//                 this.focus--;
+//                 this.addActive(children);
 
 
-            } else if (event.keyCode == 13) {
+//             } else if (event.keyCode == 13) {
 
-                event.preventDefault();
+//                 event.preventDefault();
 
-                if (this.focus > -1) {
+//                 if (this.focus > -1) {
 
-                    if (children) children[this.focus].click();
-                }
-            }
-        });
-    }
+//                     if (children) children[this.focus].click();
+//                 }
+//             }
+//         });
+//     }
 
-    click() {
+//     click() {
 
-        document.addEventListener('click', (event) => {
-            this.closeAllLists(event.target);
-        });
-    }
+//         document.addEventListener('click', (event) => {
+//             this.closeAllLists(event.target);
+//         });
+//     }
     
-    listen() {
+//     listen() {
 
-        this.click();        
-        this.inputEvent();
-        this.keydown();
-    }
-}
+//         this.click();        
+//         this.inputEvent();
+//         this.keydown();
+//     }
+// }
 

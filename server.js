@@ -50,9 +50,11 @@ const search = obj => {
             }
     
             if (!!table.length) {
-     
+
                 table.forEach(element => {
+
                     data.push(element[obj.selector]);
+
                 });
 
                 resolve(data);
@@ -84,13 +86,15 @@ app.post('/search', (req, res) => {
 
         search({table: 'products', selector: 'product_name', question: question})
         .then((data) => { 
+
+            console.log(data)
             
             res.status(202).end(JSON.stringify(data));
 
         })
         .catch((error) => {
             console.log(error)
-            res.status(500).end();
+            res.end();
         })
 
     } else {

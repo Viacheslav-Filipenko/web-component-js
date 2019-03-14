@@ -1,12 +1,11 @@
-import {request, Autocomplete} from './utils.js';
+import {request} from './utils.js';
 
 
 const input = document.querySelector('#myInput');
 
-const autocomplete = new Autocomplete(input, {
-  active: 'autocomplete-active',
-  class: 'autocomplete-items',
-  id: 'autocomplete-list'
-});
+const autocomplete = document.querySelector('autocomplete-search-input');
+autocomplete.data  = [
+    'hello',
+    'there'
+]
 
-autocomplete.listen();
